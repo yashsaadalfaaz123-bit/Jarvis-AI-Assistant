@@ -1,0 +1,9 @@
+{
+  "id": "issue_tracker",
+  "problemDescription": "Issue Tracker - imported issues from external trackers",
+  "phase": "identification",
+  "createdAt": "2026-10-17T19:20:09.332Z",
+  "updatedAt": "2026-10-17T19:20:09.332Z",
+  "identifiedProblems": [],
+  "isIssueTracker": true
+}

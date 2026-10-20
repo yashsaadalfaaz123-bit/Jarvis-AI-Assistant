@@ -1,0 +1,427 @@
+{
+  "rootFolder": "c:\\Users\\Official_Javed\\Videos\\my python chapters\\my project",
+  "analyzedAt": "2026-10-17T19:17:59.092Z",
+  "rootStructure": [
+    {
+      "name": "all_function.py",
+      "type": "file",
+      "size": 2879,
+      "lines": 96
+    },
+    {
+      "name": "app_opner.py",
+      "type": "file",
+      "size": 292,
+      "lines": 13
+    },
+    {
+      "name": "bussines.py",
+      "type": "file",
+      "size": 1234,
+      "lines": 51
+    },
+    {
+      "name": "bu_test.py",
+      "type": "file",
+      "size": 801,
+      "lines": 47
+    },
+    {
+      "name": "calculater.py",
+      "type": "file",
+      "size": 646,
+      "lines": 32
+    },
+    {
+      "name": "chat.py",
+      "type": "file",
+      "size": 2580,
+      "lines": 99
+    },
+    {
+      "name": "Costomer.txt",
+      "type": "file",
+      "size": 246,
+      "lines": 4
+    },
+    {
+      "name": "data.txt",
+      "type": "file",
+      "size": 4,
+      "lines": 1
+    },
+    {
+      "name": "desktop.ini",
+      "type": "file",
+      "size": 114,
+      "lines": 7
+    },
+    {
+      "name": "edig_tts.py",
+      "type": "file",
+      "size": 44,
+      "lines": 4
+    },
+    {
+      "name": "hello_world.py",
+      "type": "file",
+      "size": 21,
+      "lines": 2
+    },
+    {
+      "name": "hiscore.txt",
+      "type": "file",
+      "size": 2,
+      "lines": 1
+    },
+    {
+      "name": "list_do.py",
+      "type": "file",
+      "size": 404,
+      "lines": 20
+    },
+    {
+      "name": "my _program.py",
+      "type": "file",
+      "size": 607,
+      "lines": 26
+    },
+    {
+      "name": "my_fast_ai.py",
+      "type": "file",
+      "size": 144,
+      "lines": 6
+    },
+    {
+      "name": "password_genaret.py",
+      "type": "file",
+      "size": 344,
+      "lines": 13
+    },
+    {
+      "name": "progrsm.py",
+      "type": "file",
+      "size": 680,
+      "lines": 26
+    },
+    {
+      "name": "question.py",
+      "type": "file",
+      "size": 622,
+      "lines": 37
+    },
+    {
+      "name": "search.py",
+      "type": "file",
+      "size": 315,
+      "lines": 14
+    },
+    {
+      "name": "test.py",
+      "type": "file",
+      "size": 5023,
+      "lines": 162
+    },
+    {
+      "name": "tests.py",
+      "type": "file",
+      "size": 906,
+      "lines": 53
+    },
+    {
+      "name": "ultron_chat.txt",
+      "type": "file",
+      "size": 36,
+      "lines": 3
+    },
+    {
+      "name": "ultron_log.txt",
+      "type": "file",
+      "size": 29,
+      "lines": 1
+    },
+    {
+      "name": "weather.py",
+      "type": "file",
+      "size": 104,
+      "lines": 5
+    }
+  ],
+  "rootFileSnippets": {
+    "all_function.py": [
+      "import requests",
+      "import webbrowser",
+      "import duckduckgo_search",
+      "def weather(city_input):",
+      "faltu_words = [\"weather\", \"mousam\", \"ka\", \"aaj\", \"app\", \"deakhana\", \"ko\", \"mein\"]",
+      "",
+      "city = city_input.lower()",
+      "for word in faltu_words:",
+      "city = city.replace(word, \"\")",
+      ""
+    ],
+    "app_opner.py": [
+      "import os",
+      "import webbrowser",
+      "def app_open():",
+      "while True:",
+      "user=input(\"Enter kon sa app kholna ha : \")",
+      "if(user==\"break\"):",
+      "break",
+      "",
+      "",
+      "url =webbrowser.open( f\"https://www.google.com/search?q={user}\")"
+    ],
+    "bussines.py": [
+      "def bussines():",
+      "try:",
+      "while True:",
+      "",
+      "d={}",
+      "name=input(\"Inter your name: \")",
+      "",
+      "if(name==\"exit\"):",
+      "break",
+      ""
+    ],
+    "bu_test.py": [
+      "import difflib",
+      "name_find=input(\"Enter find name: \")",
+      "found=False",
+      "with open(\"Costomer.txt\",\"r\") as f:",
+      "e= f.read ()",
+      "",
+      "",
+      "f=e.splitlines()",
+      "",
+      "names=[]"
+    ],
+    "calculater.py": [
+      "# def calculater(a,b,opratter):",
+      "",
+      "",
+      "",
+      "#     if(opratter==\"+\"):",
+      "#         return a+b",
+      "#     elif(opratter==\"-\"):",
+      "#         return a-b",
+      "#     elif(opratter==\"*\"):",
+      "#         return a*b"
+    ],
+    "chat.py": [
+      "# import requests",
+      "# def chat():",
+      "#     user=input(\"kay bat karna ha : \")",
+      "#     url=\"http://localhost:11434/api/generate\"",
+      "#     payload={",
+      "#         \"model\":\"llama3:latest\",",
+      "#         \"prompt\":user,",
+      "#         \"stream\":False",
+      "#     }",
+      "#     response=requests.post(url,json=payload)"
+    ],
+    "Costomer.txt": [
+      "Name: yesh, Phone: 9565954152, Amount: 500.0 ,date: 9-10-2026 ,location:  babhnan",
+      "Name: yesh, Phone: 9999999999, Amount: 500.0 ,date: 9 10 2026 ,location:  bbasti",
+      "Name: yesh, Phone: 9565954152, Amount: 6230.0 ,date: 5-2-2026 ,location:  basti",
+      ""
+    ],
+    "data.txt": [
+      "yesh"
+    ],
+    "desktop.ini": [
+      "[.ShellClassInfo]",
+      "IconResource=C:\\WINDOWS\\System32\\SHELL32.dll,334",
+      "[ViewState]",
+      "Mode=",
+      "Vid=",
+      "FolderType=Videos",
+      ""
+    ],
+    "edig_tts.py": [
+      "import os",
+      "import pygame",
+      "import edge_tts",
+      ""
+    ],
+    "hello_world.py": [
+      "print(\"Hello World\")",
+      ""
+    ],
+    "hiscore.txt": [
+      "60"
+    ],
+    "list_do.py": [
+      "to_do_list=[]",
+      "while True:",
+      "try:",
+      "user_input=input(\"Enter your task: \")",
+      "",
+      "",
+      "if(user_input==\"exit\"):",
+      "break",
+      "",
+      "to_do_list.append(user_input)"
+    ],
+    "my _program.py": [
+      "def save_memory(msg):",
+      "try:",
+      "with open(\"ultron_chat.txt\",\"a\") as f:",
+      "f.write(msg+\"\\n\")",
+      "except FileNotFoundError:",
+      "print(\"file nahi mile ,sahi sa check karo\")",
+      "def read_memory():",
+      "try:",
+      "with open(\"ultron_chat.txt\",\"r\") as f:",
+      "r=f.read()"
+    ],
+    "my_fast_ai.py": [
+      "def check_status():",
+      "try:",
+      "with open(\".txt\",\"r\") as f:",
+      "f.read()",
+      "except FileNotFoundError:",
+      "print(\"file nahi mila\")"
+    ],
+    "password_genaret.py": [
+      "import random",
+      "import string",
+      "def generate_password(length):",
+      "password=\"\"",
+      "",
+      "characters = string.ascii_letters + string.digits",
+      "for _ in range(length):",
+      "cha=random.choice(characters)",
+      "password+= cha",
+      "print(\"Your generated password is:\", password)"
+    ],
+    "progrsm.py": [
+      "import requests",
+      "import duckduckgo_search",
+      "def weather():",
+      "",
+      "user=input(\"app kaha ka weather dakhana chata ha: \")",
+      "w=requests.get(f\"https://wttr.in/{user}\")",
+      "print(w.text)",
+      "",
+      "",
+      "def search():"
+    ],
+    "question.py": [
+      "",
+      "ai=\"what is 2+2 \"",
+      "",
+      "",
+      "",
+      "print(ai)",
+      "score=0",
+      "",
+      "n=input(\"Enter the correct answer: \")",
+      "if(n=='4'):"
+    ],
+    "search.py": [
+      "import duckduckgo_search",
+      "import requests",
+      "while True:",
+      "",
+      "user=input(\"kay search karna ha: \")",
+      "url = requests.get(f\"https://api.duckduckgo.com/?q={user}&format=json\")",
+      "data=url.json()",
+      "",
+      "",
+      ""
+    ],
+    "test.py": [
+      "# # name = \"Tauseeb\"",
+      "# # name = \"Rahul\"",
+      "# # # print(name)",
+      "",
+      "# import os",
+      "# import json",
+      "# import sqlite3",
+      "",
+      "# BASE_DIR = os.path.dirname(os.path.abspath(__file__))",
+      "# DB_FILE = os.path.join(BASE_DIR, \"jarvis_memory.db\")"
+    ],
+    "tests.py": [
+      "# name=input(\"Enter your name: \")",
+      "# age=int(input(\"Enter your age: \"))",
+      "# d={\"name\":name,",
+      "#    \"age\":age",
+      "",
+      "",
+      "# }",
+      "# print(d)",
+      "",
+      ""
+    ],
+    "ultron_chat.txt": [
+      "hellow ultron hi touseebhi",
+      "kay ha",
+      ""
+    ],
+    "ultron_log.txt": [
+      "AI Name: ultron, Version: 3.0"
+    ],
+    "weather.py": [
+      "import requests",
+      "n=input(\"inter your states: \")",
+      "w=requests.get(f\"https://wttr.in/{n}\")",
+      "print(w.text)",
+      ""
+    ]
+  },
+  "importantFolders": [],
+  "readmeParagraphs": {},
+  "totals": {
+    "numFiles": 24,
+    "numDirs": 0,
+    "totalSizeBytes": 18077,
+    "totalLinesOfCode": 706
+  },
+  "fileCategories": {
+    "source": 18,
+    "documentation": 5,
+    "config": 1
+  },
+  "linesOfCodePerLanguage": {
+    "Python": 706
+  },
+  "filesPerLanguage": {
+    "Python": 18
+  },
+  "projectTypes": [],
+  "frameworks": [],
+  "entryPoints": [],
+  "ciCdTools": [],
+  "packageManagers": [],
+  "topLevelDirectories": [],
+  "detailedDirectories": [],
+  "architecturalInsights": {
+    "coreApplications": [],
+    "entryPointDetails": [],
+    "serviceArchitecture": {
+      "microservices": [],
+      "monoliths": [],
+      "libraries": []
+    },
+    "layeredArchitecture": {
+      "presentation": [],
+      "business": [],
+      "data": [],
+      "infrastructure": []
+    }
+  },
+  "largeFiles": [],
+  "dependencies": {
+    "production": [],
+    "development": [],
+    "total": 0
+  },
+  "complexity": {
+    "averageFileSize": 29.416666666666668,
+    "maxFileSize": 0,
+    "nestedDepth": 0,
+    "estimatedComplexity": "low"
+  }
+}

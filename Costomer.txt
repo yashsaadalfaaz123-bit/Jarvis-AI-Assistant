@@ -1,0 +1,3 @@
+Name: yesh, Phone: 9565954152, Amount: 500.0 ,date: 9-10-2026 ,location:  babhnan
+Name: yesh, Phone: 9999999999, Amount: 500.0 ,date: 9 10 2026 ,location:  bbasti
+Name: yesh, Phone: 9565954152, Amount: 6230.0 ,date: 5-2-2026 ,location:  basti
