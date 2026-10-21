@@ -4,6 +4,8 @@ import requests
 import duckduckgo_search
 import webbrowser
 import asyncio
+import datetime
+
 
 async def speak(text):
 
@@ -74,9 +76,20 @@ def app_opner(app_name):
  url=( f"https://www.{app_name}.com")
  webbrowser.open(url)
  asyncio.run(speak(f"Opening {app_name}"))
+def tell_time():
+ current_time=datetime.datetime.now()
+ clen_time=current_time.strftime("%I:%M %p")
+ asyncio.run(speak(f"sir the time is {clen_time}"))
+def tell_date():
+ current_date=datetime.datetime.now()
+ clen_date=current_date.strftime("%d:%B:%Y")
+ asyncio.run(speak(f"sir the date is {clen_date}"))
+ 
 def main_command():
+ 
  while True:
   user_command=input("app aj kay karna chata ha : ")
+
  
    
 
@@ -97,6 +110,10 @@ def main_command():
     app_name=user_command.replace(i,"")
 
     app_opner(app_name.strip())
+  elif "time" in user_command or "samay" in user_command:
+   tell_time()
+  elif "date" in user_command or "din" in user_command:
+   tell_date()
     
 
   
