@@ -1,0 +1,36 @@
+New-Item -ItemType Directory -Force C:\alarm | Out-Null
+
+@'
+<!DOCTYPE html><meta charset="utf-8"><title>ALARM</title>
+<body style="margin:0;background:#d00;color:#fff;font-family:sans-serif;text-align:center">
+<h1 style="font-size:6vw;margin-top:20vh">UTH JAO! ALARM BAJ RAHA HAI</h1>
+<button id="s" style="font-size:4vw;padding:20px 40px">BAND KARO</button>
+<script>
+var c=new AudioContext(),o=c.createOscillator(),g=c.createGain(),h=0,t,v;
+c.resume();o.type='square';g.gain.value=1;o.connect(g);g.connect(c.destination);o.start();
+t=setInterval(function(){h=!h;o.frequency.value=h?1200:700},300);
+function sp(){var u=new SpeechSynthesisUtterance('Uth jao! Uth jao! Alarm baj raha hai!');u.lang='hi-IN';speechSynthesis.speak(u)}
+sp();v=setInterval(sp,6000);
+document.getElementById('s').onclick=function(){clearInterval(t);clearInterval(v);o.stop();speechSynthesis.cancel();document.body.style.background='#222'};
+</script>
+'@ | Set-Content C:\alarm\alarm.html -Encoding UTF8
+
+@'
+$w = New-Object -ComObject WScript.Shell
+1..50 | ForEach-Object { $w.SendKeys([char]175) }
+Start-Process msedge -ArgumentList '--user-data-dir=C:\alarm\profile','--autoplay-policy=no-user-gesture-required','--new-window','file:///C:/alarm/alarm.html'
+Add-Type -AssemblyName System.Speech
+$s = New-Object System.Speech.Synthesis.SpeechSynthesizer
+$s.Volume = 100
+$s.Rate = 4
+1..200 | ForEach-Object {
+    1..10 | ForEach-Object { [console]::Beep(2500,80); [console]::Beep(1500,80) }
+    $s.Speak("Uth jao. Uth jao. Alarm baj raha hai.")
+}
+'@ | Set-Content C:\alarm\alarm.ps1
+
+$when = (Get-Date).Date.AddDays(1).AddHours(6)   # कल सुबह 6:00
+$a = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-ExecutionPolicy Bypass -File C:\alarm\alarm.ps1"
+$t = New-ScheduledTaskTrigger -Once -At $when
+$s = New-ScheduledTaskSettingsSet -WakeToRun -StartWhenAvailable -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
+Register-ScheduledTask -TaskName "TezAlarm" -Action $a -Trigger $t -Settings $s -Force

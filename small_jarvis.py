@@ -5,6 +5,8 @@ import duckduckgo_search
 import webbrowser
 import asyncio
 import datetime
+import speech_recognition as sr
+
 
 
 async def speak(text):
@@ -19,6 +21,23 @@ async def speak(text):
  while pygame.mixer_music.get_busy():
   pygame.time.Clock().tick(10)
  pygame.mixer_music.unload()
+
+def listen():
+ r=sr.Recognizer()
+ with sr.Microphone() as source:
+
+  print("LETINIENG....")
+
+  audio=r.listen(source)
+  try:
+    e=r.recognize_google(audio,language='en-IN')
+    e.lower()
+    return e.lower()
+  except:
+   return ""
+
+
+
   
 
 
@@ -86,9 +105,9 @@ def tell_date():
  asyncio.run(speak(f"sir the date is {clen_date}"))
  
 def main_command():
- 
+ asyncio.run(speak("hi sir may online hu"))
  while True:
-  user_command=input("app aj kay karna chata ha : ")
+  user_command=listen()
 
  
    
