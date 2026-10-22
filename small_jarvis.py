@@ -6,6 +6,7 @@ import webbrowser
 import asyncio
 import datetime
 import speech_recognition as sr
+import json
 
 
 
@@ -31,14 +32,33 @@ def listen():
   audio=r.listen(source)
   try:
     e=r.recognize_google(audio,language='en-IN')
+    print(e)
     e.lower()
     return e.lower()
   except:
    return ""
 
-
-
   
+def long_term_memory():
+ with open("clint_prosnal_memory.json") as f:
+  r=json.load(f)
+
+  r["key_name"]="Value"
+
+
+  with open("clint_prosnal_memory.json","w") as f:
+   json.dump(r,f,indent=4)
+   
+
+def get_name():
+    try:
+        
+        with open("clint_prosnal_memory.json", "r") as f:
+            data = json.load(f)
+            data["key_name"]="Value"
+            return data.get("name", "dost") # Agar naam na mile toh 'dost' bol dega
+    except FileNotFoundError:
+        return "dost"
 
 
 def chat(prompt):
@@ -91,6 +111,8 @@ def search(query):
      print(topic["Text"])
      asyncio.run(speak(topic["Text"]))
      break
+
+
 def app_opner(app_name):
  url=( f"https://www.{app_name}.com")
  webbrowser.open(url)
@@ -133,6 +155,12 @@ def main_command():
    tell_time()
   elif "date" in user_command or "din" in user_command:
    tell_date()
+  elif "save" in user_command or "yadkaro" in user_command or "sev" in user_command :
+   long_term_memory()
+   asyncio.run(speak("yes sar ma na save kar leya ha "))
+  elif "mera naam kya hai" in user_command or "what is my name" in user_command:
+            saved_name = get_name()
+            asyncio.run(speak(f"Aapka naam {saved_name} hai"))
     
 
   
