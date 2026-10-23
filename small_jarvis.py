@@ -1,4 +1,6 @@
 import edge_tts
+import os
+
 import pygame
 import requests
 import duckduckgo_search
@@ -38,37 +40,36 @@ def listen():
   except:
    return ""
 
-  
-def long_term_memory():
- with open("clint_prosnal_memory.json") as f:
-  r=json.load(f)
-
-  r["key_name"]="Value"
-
-
-  with open("clint_prosnal_memory.json","w") as f:
-   json.dump(r,f,indent=4)
-   
-
-def get_name():
-    try:
-        
-        with open("clint_prosnal_memory.json", "r") as f:
-            data = json.load(f)
-            data["key_name"]="Value"
-            return data.get("name", "dost") # Agar naam na mile toh 'dost' bol dega
-    except FileNotFoundError:
-        return "dost"
-
 
 def chat(prompt):
+ try:
+  final_prompt=prompt
+  with  open("clint_prosnal_memory.json","r") as f:
+    h=json.load(f)
+    history_list = h.get("history", [])
+    history_text = "\n".join(history_list)
+    final_prompt = f"History:\n{history_text}\n\nUser: {prompt}"
+ except Exception as n:
+  print(n)
+  final_prompt = (
+                "You are JARVIS, a helpful personal voice assistant. "
+                "Here is the past conversation history with the user:\n"
+                f"{history_text}\n\n"
+                "Based on the above history, answer the user's latest question naturally and smartly in Hinglish/English.\n"
+                f"User's latest question: {prompt}"
+            )
+ except Exception as n:
+        print(n)
+        final_prompt = prompt
  
  url="http://localhost:11434/api/generate"
+ 
 
-
+  
  payload={
      "model":"llama3:latest",
-     "prompt":prompt,
+     
+     "prompt":final_prompt,
      "stream":False
  }
 
@@ -126,14 +127,37 @@ def tell_date():
  clen_date=current_date.strftime("%d:%B:%Y")
  asyncio.run(speak(f"sir the date is {clen_date}"))
  
+def long_term_memory(command):
+    memory_file = "clint_prosnal_memory.json"
+    
+    if os.path.exists(memory_file):
+        try:
+            with open(memory_file, "r") as f:
+                data = json.load(f)
+                # Yeh check karega ki agar file mein history key nahi hai, toh nayi bana le
+                if not isinstance(data, dict) or "history" not in data:
+                    data = {"history": []}
+        except json.JSONDecodeError:
+            data = {"history": []}
+    else:
+        data = {"history": []}
+
+    # Naye sentence ko history list mein append kar do
+    data["history"].append(command)
+
+    # Wapas file mein save kar do
+    with open(memory_file, "w") as f:
+        json.dump(data, f, indent=4)
+
 def main_command():
  asyncio.run(speak("hi sir may online hu"))
  while True:
+
   user_command=listen()
-
- 
-   
-
+  if not user_command:
+    continue
+  if user_command:
+    long_term_memory(user_command)
   if("mousam" in user_command or"weather"in user_command):
     replace=["mousam","weather","ka","batayo","ajj","kasa","ha"]
     for i in replace:
@@ -141,6 +165,7 @@ def main_command():
        
   
     weather(user_command.strip())
+  
  
     
   elif "search" in user_command or "patakaro" in user_command:
@@ -155,14 +180,8 @@ def main_command():
    tell_time()
   elif "date" in user_command or "din" in user_command:
    tell_date()
-  elif "save" in user_command or "yadkaro" in user_command or "sev" in user_command :
-   long_term_memory()
-   asyncio.run(speak("yes sar ma na save kar leya ha "))
-  elif "mera naam kya hai" in user_command or "what is my name" in user_command:
-            saved_name = get_name()
-            asyncio.run(speak(f"Aapka naam {saved_name} hai"))
-    
-
+   
+  
   
   else:
    chat(user_command)
