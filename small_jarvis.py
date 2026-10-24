@@ -8,7 +8,11 @@ import webbrowser
 import asyncio
 import datetime
 import speech_recognition as sr
+from pycaw.pycaw import AudioUtilities ,  IAudioEndpointVolume
 import json
+from comtypes import CLSCTX_ALL
+from ctypes import cast, POINTER
+
 
 
 
@@ -126,6 +130,9 @@ def tell_date():
  current_date=datetime.datetime.now()
  clen_date=current_date.strftime("%d:%B:%Y")
  asyncio.run(speak(f"sir the date is {clen_date}"))
+def shutdown ():
+  os.system("shutdown /s /t 1")
+
  
 def long_term_memory(command):
     memory_file = "clint_prosnal_memory.json"
@@ -149,6 +156,15 @@ def long_term_memory(command):
     with open(memory_file, "w") as f:
         json.dump(data, f, indent=4)
 
+def valume(level):
+  devices= AudioUtilities.GetSpeakers()
+
+  interface=devices.EndpointVolume
+  
+  interface.SetMasterVolumeLevelScalar(level/100,None)
+  
+
+
 def main_command():
  asyncio.run(speak("hi sir may online hu"))
  while True:
@@ -158,6 +174,7 @@ def main_command():
     continue
   if user_command:
     long_term_memory(user_command)
+  
   if("mousam" in user_command or"weather"in user_command):
     replace=["mousam","weather","ka","batayo","ajj","kasa","ha"]
     for i in replace:
@@ -181,7 +198,30 @@ def main_command():
   elif "date" in user_command or "din" in user_command:
    tell_date()
    
+  elif "volume" in user_command or "awaj" in user_command:
+   word=user_command.split()
+   level=None
+   for i in word:
+     number_tex=i.replace("%","")
+     if number_tex.isdigit():
+       level=int(number_tex)
+   if level is None:
+    print("koy number nahi mila")
+   
+   else:
+     if( level> 100):
+      print("app na glat persantage bola ha ya  100 sa jada ha")
+     
+   
   
+     else:
+     
+       valume(level)
+       asyncio.run(speak(f"volume {level} par set kar dia hay"))
+
+  elif "shutdown" in user_command or " band karo" in user_command:
+    shutdown()
+
   
   else:
    chat(user_command)
