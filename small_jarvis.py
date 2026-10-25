@@ -12,7 +12,7 @@ from pycaw.pycaw import AudioUtilities ,  IAudioEndpointVolume
 import json
 from comtypes import CLSCTX_ALL
 from ctypes import cast, POINTER
-
+import cv2 
 
 
 
@@ -132,6 +132,9 @@ def tell_date():
  asyncio.run(speak(f"sir the date is {clen_date}"))
 def shutdown ():
   os.system("shutdown /s /t 1")
+def restart():
+  os.system("restart /r /t /1")
+  
 
  
 def long_term_memory(command):
@@ -162,6 +165,27 @@ def valume(level):
   interface=devices.EndpointVolume
   
   interface.SetMasterVolumeLevelScalar(level/100,None)
+
+def openCV():
+
+  cap= cv2.VideoCapture(0)
+  if not cap.isOpened():
+    print("camara nahi chal rha ha ")
+    return
+  
+  while True:
+
+    
+    ret,frame=cap.read()
+    if not ret:
+      print("camara nahi mila !")
+    cv2.imshow("JARVIS VISION",frame)
+    
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+  cap.release()
+  cv2.destroyAllWindows()
+openCV()
   
 
 
@@ -221,6 +245,8 @@ def main_command():
 
   elif "shutdown" in user_command or " band karo" in user_command:
     shutdown()
+  elif "restart" in user_command :
+    restart()
 
   
   else:
