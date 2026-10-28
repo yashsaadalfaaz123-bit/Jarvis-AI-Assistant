@@ -12,8 +12,25 @@ from pycaw.pycaw import AudioUtilities ,  IAudioEndpointVolume
 import json
 from comtypes import CLSCTX_ALL
 from ctypes import cast, POINTER
+#========= CAMARA KA LAYA =========================
 import cv2 
+import requests     # Ollama ke local server par HTTP request bhejne ke liye
+import base64
+import time
+import threading
+import google.generativeai as genai
+# ====================================================
+from dotenv import load_dotenv
+load_dotenv()
+# File ke sabse upar yahan apni key rakh de
+# File ke sabse upar yahan apni key rakh de
+# GitHub safe configuration: Environment variable se key uthayega
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+# API key configure karna
+genai.configure(api_key=GEMINI_API_KEY)
 
+# Gemini vision model ko variable mein set karna
+model = genai.GenerativeModel('gemini-3.6-flash')
 
 
 async def speak(text):
@@ -166,7 +183,42 @@ def valume(level):
   
   interface.SetMasterVolumeLevelScalar(level/100,None)
 
-def openCV():
+def send_gemini(frame):
+      
+    # 1. Frame ko snapshot.jpg mein save karna
+       cv2.imwrite("snapshot.jpg", frame)
+    
+    # 2. Image ko base64 mein read karna
+       with open("snapshot.jpg", "rb") as f:
+        image_bytes = f.read()
+       image_base64 = base64.b64encode(image_bytes).decode("utf-8")
+       url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key={GEMINI_API_KEY}"
+       paylode={
+         "contents":[{"role":"user",
+                       "parts":[{"text":"Is image mein kya dikh raha hai?",
+                              
+                                 },
+                     { "inline_data":{ "mime_type": "image/jpeg",
+                                      "data": image_base64
+                                      
+                                      },}]
+                      }],
+        
+       }
+       response=requests.post(url,json=paylode)
+       if response.status_code==200:
+         result=response.json()
+         gemini_generat_answer= result.get("candidates")
+         content=gemini_generat_answer[0].get("content")
+         part=content.get("parts")
+         answer=part[0].get("text")
+         asyncio.run(speak(answer))
+       
+       else:
+         print("Gemini Error:", response.status_code, response.text)
+
+latest_frame = None
+def camera_loop():
 
   cap= cv2.VideoCapture(0)
   if not cap.isOpened():
@@ -174,19 +226,27 @@ def openCV():
     return
   
   while True:
+      
+       
 
-    
-    ret,frame=cap.read()
-    if not ret:
-      print("camara nahi mila !")
-    cv2.imshow("JARVIS VISION",frame)
-    
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+        
+        
+          ret,frame=cap.read()
+          if not ret:
+              print("camara nahi mila !")
+              break
+          global latest_frame
+          latest_frame = frame.copy()
+          cv2.imshow("JARVIS VISION",frame)
+          cv2.imwrite("snapshot.jpg", frame)
+          
+          if cv2.waitKey(1) & 0xFF == ord('q'):
+                    break
+
   cap.release()
   cv2.destroyAllWindows()
-openCV()
-  
+
+
 
 
 def main_command():
@@ -247,14 +307,24 @@ def main_command():
     shutdown()
   elif "restart" in user_command :
     restart()
-
   
+  elif any(word in user_command for word in [
+      "kya hai", "kay hai", "kya dikh raha",
+      "dikh raha hai", "what is this", "what do you see"
+  ]):
+      if latest_frame is not None:
+          threading.Thread(
+              target=send_gemini,
+              args=(latest_frame.copy(),),
+              daemon=True
+          ).start()
+      else:
+          asyncio.run(speak("Camera frame abhi available nahi hai."))
+
   else:
    chat(user_command)
-
+threading.Thread(target=camera_loop, daemon=True).start()
 main_command()
-
-
   
 
 

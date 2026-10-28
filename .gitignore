@@ -1,0 +1,6 @@
+.env
+venv/
+snapshot.jpg
+__pycache__/
+*.pyc
+clint_prosnal_memory.json
