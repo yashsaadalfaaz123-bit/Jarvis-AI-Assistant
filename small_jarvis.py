@@ -36,7 +36,8 @@ import os
 import shutil
 import pathlib
 #===========================================================
-
+#================battry percentage==========================
+import psutil
 
 async def speak(text):
 
@@ -297,6 +298,27 @@ def organize_files():
   finally:
    asyncio.run(speak("File succes fully move ho gay ha "))
 
+def learn_leptop_battry():
+  battry=psutil.sensors_battery() # psutil ya window sa puchata ha battery ka ka kay hal chal ha 
+  percentage=battry.percent # percent yaha  pa percentage aata ha  
+  if battry.power_plugged: # ya pata karta ha ke leptop charging pa ha ya nahi
+    print(f"battery percentage {percentage} hai our leptop charge laga hai") # pahla ya terminal pa print ho ga 
+    asyncio.run(speak(f"battery percentage {percentage} hai or leptop charge laga hai"))# fir jarvis ya bola ga 
+  else:
+    battry_backep=battry.secsleft # ya baata ha ke batttery kab takchala ga 
+  
+    if battry_backep and battry_backep > 0:
+        minutes = battry_backep // 60
+        print(f"battery percentage {percentage} hai abhi leptop charge pay nahi hai Mere Khayal Se leptop lagbag {minutes} minute tak chala gaa")# phala ya terminal pa print ho ga
+        asyncio.run(speak(f"battery percentage {percentage} hai abhi leptop charge pay nahi hai Mere Khayal Se  leptop lagbag {minutes} minute tak Chalega"))# fir jarvis ya bola ga
+    else:
+        print(f"battery percentage {percentage} hai or leptop charge pay nahi hai")
+        asyncio.run(speak(f"battery percentage {percentage} hai or leptop charge pay nahi hai"))
+   
+
+  
+
+
 
 
 
@@ -356,10 +378,13 @@ def main_command():
 
   elif "shutdown" in user_command or " band karo" in user_command:
     shutdown()
+  elif any(word in user_command for word in["battery","charge","power"]): # any matlab koy bhi mat is ma sa koy bhi word sentenc ma ho to is ko call kar do 
+    learn_leptop_battry()
   elif "restart" in user_command :
     restart()
-  elif "Organize files" in user_command or "file ko sahi sa rakh do" in user_command or "organised files" in user_command or "organised organised file" in user_command or "Organize file" in user_command or "organised file" in user_command or "file" in user_command:
+  elif any(word in user_command for word in["file","organize","orgenise"] ):
     organize_files()
+  
 
   
   elif any(word in user_command for word in [
