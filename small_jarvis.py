@@ -13,18 +13,21 @@ import json
 from comtypes import CLSCTX_ALL
 from ctypes import cast, POINTER
 #========= CAMARA KA LAYA =========================
-import cv2 
-import requests     # Ollama ke local server par HTTP request bhejne ke liye
-import base64
-import time
+import cv2
 import threading
-import google.generativeai as genai
+import base64
+from groq import Groq
 # ====================================================
 from dotenv import load_dotenv
 load_dotenv()
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+groq_client = Groq(api_key=GROQ_API_KEY)
+for m in groq_client.models.list().data:
+    print(m.id)
 # File ke sabse upar yahan apni key rakh de
 # File ke sabse upar yahan apni key rakh de
 # GitHub safe configuration: Environment variable se key uthayega
+import google.generativeai as genai
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 # API key configure karna
 genai.configure(api_key=GEMINI_API_KEY)
@@ -186,71 +189,80 @@ def valume(level):
   devices= AudioUtilities.GetSpeakers()
 
   interface=devices.EndpointVolume
-  
-  interface.SetMasterVolumeLevelScalar(level/100,None)
+def send_gemini():
+    try:
+        frame = latest_frame
 
-def send_gemini(frame):
-      
-    # 1. Frame ko snapshot.jpg mein save karna
-       cv2.imwrite("snapshot.jpg", frame)
-    
-    # 2. Image ko base64 mein read karna
-       with open("snapshot.jpg", "rb") as f:
-        image_bytes = f.read()
-       image_base64 = base64.b64encode(image_bytes).decode("utf-8")
-       url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key={GEMINI_API_KEY}"
-       paylode={
-         "contents":[{"role":"user",
-                       "parts":[{"text":"Is image mein kya dikh raha hai?",
-                              
-                                 },
-                     { "inline_data":{ "mime_type": "image/jpeg",
-                                      "data": image_base64
-                                      
-                                      },}]
-                      }],
-        
-       }
-       response=requests.post(url,json=paylode)
-       if response.status_code==200:
-         result=response.json()
-         gemini_generat_answer= result.get("candidates")
-         content=gemini_generat_answer[0].get("content")
-         part=content.get("parts")
-         answer=part[0].get("text")
-         asyncio.run(speak(answer))
-       
-       else:
-         print("Gemini Error:", response.status_code, response.text)
+        if frame is None:
+            print("Camera frame available nahi hai.")
+            return
 
-latest_frame = None
+        # Frame ko JPEG format mein convert karo
+        success, buffer = cv2.imencode(".jpg", frame)
+
+        if not success:
+            print("Image convert nahi ho payi.")
+            return
+
+        # Image ko Base64 mein convert karo
+        image_base64 = base64.b64encode(buffer).decode("utf-8")
+
+        # Groq Vision se image analyse karwao
+        response = groq_client.chat.completions.create(
+            model="qwen/qwen3.8-27b",
+            messages=[
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "Tumhe is image mein kya dikh raha hai? Hinglish mein batao."
+                        },
+                        {
+                            "type": "image_url",
+                            "image_url": {
+                                "url": f"data:image/jpeg;base64,{image_base64}"
+                            }
+                        }
+                    ]
+                }
+            ],
+            temperature=0.3,
+            max_completion_tokens=300
+        )
+
+        answer = response.choices[0].message.content
+
+        print("Groq Vision:", answer)
+        asyncio.run(speak(answer))
+
+    except Exception as e:
+        print("Groq Vision Error:", e)
+        asyncio.run(speak("Image analyse karne mein dikkat aa gayi hai."))
 def camera_loop():
+    cap = cv2.VideoCapture(0)
 
-  cap= cv2.VideoCapture(0)
-  if not cap.isOpened():
-    print("camara nahi chal rha ha ")
-    return
-  
-  while True:
-      
-       
+    if not cap.isOpened():
+        print("Camera nahi chal raha hai")
+        return
 
-        
-        
-          ret,frame=cap.read()
-          if not ret:
-              print("camara nahi mila !")
-              break
-          global latest_frame
-          latest_frame = frame.copy()
-          cv2.imshow("JARVIS VISION",frame)
-          cv2.imwrite("snapshot.jpg", frame)
-          
-          if cv2.waitKey(1) & 0xFF == ord('q'):
-                    break
+    while True:
+        ret, frame = cap.read()
 
-  cap.release()
-  cv2.destroyAllWindows()
+        if not ret:
+            print("Camera frame nahi mila!")
+            break
+
+        global latest_frame
+        latest_frame = frame.copy()
+
+        cv2.imshow("JARVIS VISION", frame)
+
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    cap.release()
+    cv2.destroyAllWindows()
 
 def organize_files():
   try:
@@ -385,8 +397,6 @@ def main_command():
   elif any(word in user_command for word in["file","organize","orgenise"] ):
     organize_files()
   
-
-  
   elif any(word in user_command for word in [
       "kya hai", "kay hai", "kya dikh raha",
       "dikh raha hai", "what is this", "what do you see"
@@ -394,7 +404,6 @@ def main_command():
       if latest_frame is not None:
           threading.Thread(
               target=send_gemini,
-              args=(latest_frame.copy(),),
               daemon=True
           ).start()
       else:
