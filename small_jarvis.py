@@ -31,6 +31,11 @@ genai.configure(api_key=GEMINI_API_KEY)
 
 # Gemini vision model ko variable mein set karna
 model = genai.GenerativeModel('gemini-3.6-flash')
+#=================Advanced File Automation==================
+import os
+import shutil
+import pathlib
+#===========================================================
 
 
 async def speak(text):
@@ -246,6 +251,52 @@ def camera_loop():
   cap.release()
   cv2.destroyAllWindows()
 
+def organize_files():
+  try:
+    downlode_path=r"C:\Users\Official_Javed\Videos\my python chapters\organize_files"
+    file_list=os.listdir(downlode_path) #listdir ka kakam  ha ke hum jo bhi path isa da ga ya us patha ma ka file kao ak ak kar ka dooga ga
+    #our use ka  name laga our ak python list ma rakha da ga
+    print(file_list)
+    for i in file_list:
+      print(i)#("""ya file_list majitna file ho ga aa gaya ga our print ho gya ga """)
+      extension= os.path.splitext(i)[1] #fir hum iska use kar ka file ka index 1 ya na kefile ka akhari word kanikala ga jasa(.py,.jpg,.txt)""")
+      sourse=os.path.join(downlode_path,i)
+      
+
+      if ".py" in extension: # fir agar file ma .py ha matlag python file ha to 
+        print("python file ha: py file ha ")# ya print kar da ga\
+        destanition=r"C:\Users\Official_Javed\Videos\my python chapters" # ya wo patha hajaha hama apna file move karvana ha 
+        shutil.move(sourse,destanition)    # ya sourse matlab jo hamara terminal ka path ha us ko sahi sa destination pa move karta\ ha
+
+      elif ".jpg" in extension or ".jpeg" in extension :# ya check kar aga ke kay .jpg ha agar ha 
+        print("photo file ha : .jpg file ha ")
+        destanition=r"C:\Users\Official_Javed\Videos\my python chapters"  
+
+        shutil.move(sourse,destanition)    
+      elif ".png" in extension:
+        print("screen sort ha:png file ha")
+        destanition=r"C:\Users\Official_Javed\Videos\my python chapters" 
+
+        shutil.move(sourse,destanition)   
+      elif ".pdf" in extension :
+        print("pdf file ha")
+        destanition=r"C:\Users\Official_Javed\Videos\my python chapters" 
+        shutil.move(sourse,destanition)   
+      elif ".txt" in extension:
+        print(".txt file ha")
+        destanition=r"C:\Users\Official_Javed\Videos\my python chapters" 
+        shutil.move(sourse,destanition)   
+      elif ".mp3" in extension:
+        print(".mp3 file ha isa move kaya ja raha")
+        destanition=r"C:\Users\Official_Javed\Videos\my python chapters" 
+        shutil.move(sourse,destanition)   
+      else:
+        print("koy file nah mila")
+  except Exception as n:
+    print("kuch galti ho gay ha ",n)
+  finally:
+   asyncio.run(speak("File succes fully move ho gay ha "))
+
 
 
 
@@ -307,6 +358,9 @@ def main_command():
     shutdown()
   elif "restart" in user_command :
     restart()
+  elif "Organize files" in user_command or "file ko sahi sa rakh do" in user_command or "organised files" in user_command or "organised organised file" in user_command or "Organize file" in user_command or "organised file" in user_command or "file" in user_command:
+    organize_files()
+
   
   elif any(word in user_command for word in [
       "kya hai", "kay hai", "kya dikh raha",
