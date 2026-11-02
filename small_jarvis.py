@@ -41,6 +41,10 @@ import pathlib
 #===========================================================
 #================battry percentage==========================
 import psutil
+#===========================================================
+#================screen short===============================
+import pyautogui
+#===========================================================
 
 async def speak(text):
 
@@ -137,6 +141,7 @@ def search(query):
    if topics:
     for topic in topics:
      
+
      
      print("Text")
      print(topic["Text"])
@@ -144,9 +149,9 @@ def search(query):
      break
 
 
-def app_opner(app_name):
- url=( f"https://www.{app_name}.com")
- webbrowser.open(url)
+def app_opner(app_name):#app name ak verivale ha jisma hamar aapp name aaya ga 
+ url=( f"https://www.{app_name}.com")# ya googlw crome ka url ha jisma hum apna app name likha da ga ya apna app likahajaya ga huma bas name dana ha 
+ webbrowser.open(url) #our ya 
  asyncio.run(speak(f"Opening {app_name}"))
 def tell_time():
  current_time=datetime.datetime.now()
@@ -326,11 +331,18 @@ def learn_leptop_battry():
     else:
         print(f"battery percentage {percentage} hai or leptop charge pay nahi hai")
         asyncio.run(speak(f"battery percentage {percentage} hai or leptop charge pay nahi hai"))
-   
-
-  
-
-
+def screen_short():
+  try: # ya try blok ha is lagana jaruari ha agar error handala karna ha 
+    screenshort= pyautogui.screenshot() # ya screenshort ha ya com puter ma jo screen ha usa dakhana ma madat karta ha a
+    screenshort.save("screenshort.jpg") # jo hum na screen sort liya ha usa ya yaha save methord ka madat sa is screenshort.jpg
+    # file ma save kartah 
+    
+  except Exception as n: # ya isa layahaa laga ha taki koy error aya to system crass na ho ya
+    print("kucha gad baadho gya ha touseeb bahi") # our ya likh kaaagaya 
+    asyncio.run(speak("kuch gadbad ho gaya ha "))# our akhr ma ya ol da
+  finally:
+    print("screen sort la laya ha our usa screenshort.jpg file ma save kar diaha") # ya skkhrima bola ga
+    asyncio.run(speak("screen sort la laya ha our usa screenshort.jpg file ma save kar diaha  "))#
 
 
 
@@ -396,6 +408,8 @@ def main_command():
     restart()
   elif any(word in user_command for word in["file","organize","orgenise"] ):
     organize_files()
+  elif any(word in user_command for word in["screenshort","photo khincho","Mera screen Dekho"]):
+    screen_short()
   
   elif any(word in user_command for word in [
       "kya hai", "kay hai", "kya dikh raha",
@@ -408,7 +422,7 @@ def main_command():
           ).start()
       else:
           asyncio.run(speak("Camera frame abhi available nahi hai."))
-
+      
   else:
    chat(user_command)
 threading.Thread(target=camera_loop, daemon=True).start()
