@@ -338,11 +338,11 @@ def screen_short():
     # file ma save kartah 
     
   except Exception as n: # ya isa layahaa laga ha taki koy error aya to system crass na ho ya
-    print("kucha gad baadho gya ha touseeb bahi") # our ya likh kaaagaya 
-    asyncio.run(speak("kuch gadbad ho gaya ha "))# our akhr ma ya ol da
+    print("Kuchh Gadbad ho gaya hai touseeb bahi") # our ya likh kaaagaya 
+    asyncio.run(speak("Kuchh Gadbad ho gaya hai touseeb bahi"))# our akhr ma ya ol da
   finally:
-    print("screen sort la laya ha our usa screenshort.jpg file ma save kar diaha") # ya skkhrima bola ga
-    asyncio.run(speak("screen sort la laya ha our usa screenshort.jpg file ma save kar diaha  "))#
+    print("aapane kaha aur Maine screenshot le liya aur screenshort.jpg file Mein jakar save kar dia hai aap Chahe to usko jakar dekh sakte hain")# ya last ma  likha ga fir
+    asyncio.run(speak("aapane kaha aur Maine screenshot le liya aur screenshort.jpg file Mein jakar save kar dia hai aap Chahe to usko jakar dekh sakte hain"))# yaha  last ma bola ga
 
 
 
@@ -408,8 +408,13 @@ def main_command():
     restart()
   elif any(word in user_command for word in["file","organize","orgenise"] ):
     organize_files()
-  elif any(word in user_command for word in["screenshort","photo khincho","Mera screen Dekho"]):
+  elif any(word in user_command for word in[" screenshot","photo khincho","Mera screen Dekho"]):
     screen_short()
+  elif "stop" in user_command or "bay" in user_command or "cal baat karte hain" in user_command:
+    print("bye Sar Main apne aap ko band kar Leta Hun aur kal Baat Karte Hain  aur agar aap computer band Karana Chahte Hain to shuutdown bolia ")
+
+    asyncio.run(speak("bye Sar Main apne aap ko band kar Leta Hun aur kal Baat Karte Hain  aur agar aap computer band Karana Chahte Hain to shuutdown bolia "))
+    break
   
   elif any(word in user_command for word in [
       "kya hai", "kay hai", "kya dikh raha",
