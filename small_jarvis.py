@@ -45,7 +45,8 @@ import psutil
 #================screen short===============================
 import pyautogui
 #===========================================================
-
+#===========minimize and close, restore=====================
+import pygetwindow as gw
 async def speak(text):
 
  cominatek=edge_tts.Communicate(text,"hi-IN-MadhurNeural")
@@ -345,7 +346,32 @@ def screen_short():
     asyncio.run(speak("aapane kaha aur Maine screenshot le liya aur screenshort.jpg file Mein jakar save kar dia hai aap Chahe to usko jakar dekh sakte hain"))# yaha  last ma bola ga
 
 
+def menimize():
+  pyautogui.hotkey("win","down")
+def all_window_minimize():
+  pyautogui.hotkey("win","m")
+def window_close():
+  pyautogui.hotkey("alt","f4")
+def restore_window(app):
+  app=app.strip()
+  app_name=gw.getActiveWindowTitle() # ya gw.getActiveWindowTitle() ya window pa jo app khula ha ya pura kapura pject la aatha  ha 
+  if app=="": # ab yaha ha agar user na kesi app ka namw nahi bola to
+    pyautogui.hotkey("win","up arrow")#  ya "win","up arrow" button daba ka  jo phla app khula tha usa he wapis laya aya ga
+    print("Sar aapane Kisi app ka naam Nahin bola tha isiliye jo pahle app Khula tha usi ko le aaya hun Wapas se agar aap Kisi app ko restor karna  Chahte Hain to uska naam bol dijiye")
+    asyncio.run(speak("Sar aapane Kisi app ka naam Nahin bola tha isiliye jo pahle app Khula tha usi ko le aaya hun Wapas se agar aap Kisi app ko restor karna  Chahte Hain to uska naam bol dijiye"))
 
+  else:
+    window=gw.getWindowsWithTitle(app) # yya methord window ka paa jaka jo app kanamw userna dia ha usa yaha da dat ha 
+    print("Computer par jitni bhi windows khuli hain:", gw.getAllTitles())
+    if window :  # ya pata kartha ha ke kay window ma kucha ha y nhai  matlab kahi hum na app bola our python nahi sun paya to ya codekoyah rok da ga
+      # or agar mil gya to 
+      win=window[0]# ya yaha aya ga our index[0] matlab first word ma ho ha usa  win mala la ga
+      win.restore()# fir win ma jo app ha usa restore karda ga 
+      win.activate()# fir restor app kahi nakuhala issa laya ya activae kause kar a kus app ka sab sa uoar la aya ga 
+    
+
+
+  
 def main_command():
  asyncio.run(speak("hi sir may online hu"))
  while True:
@@ -368,6 +394,27 @@ def main_command():
     
   elif "search" in user_command or "patakaro" in user_command:
     search(user_command)
+  elif any(word in user_command for word in["minimize","screen chota karo","minimise"]):
+   
+     menimize()
+  elif any(word in user_command for word in["close", "widow bnad karo"]):
+     replace=["is","jarvis","ko","close","karo","leptop","ma","sa","ya","app","jaldi",]
+     for i in replace:
+         user_command=user_command.replace(i,"")
+
+    
+
+     window_close(user_command.strip())
+  elif any(word in user_command for word in["restore","wapis layo","upkar karo",]):
+   replace=["restore","is","jarvis","ko","close","karo","leptop","ma","sa","ya","app","jaldi",]
+
+   for i in replace:
+           
+           user_command=user_command.replace(i,"")
+      
+   restore_window(user_command.strip())
+
+  
   elif "open" in user_command or "kholo" in user_command:
    replace=["open","khola","crome","pa",]
    for i in replace:
@@ -432,6 +479,3 @@ def main_command():
    chat(user_command)
 threading.Thread(target=camera_loop, daemon=True).start()
 main_command()
-  
-
-
