@@ -47,6 +47,13 @@ import pyautogui
 #===========================================================
 #===========minimize and close, restore=====================
 import pygetwindow as gw
+#===========================================================
+#===================whatsaap message========================
+import ollama
+import pyperclip
+import time
+pyautogui.FAILSAFE = False
+#===========================================================
 async def speak(text):
 
  cominatek=edge_tts.Communicate(text,"hi-IN-MadhurNeural")
@@ -347,9 +354,8 @@ def screen_short():
 
 
 def menimize():
-  pyautogui.hotkey("win","down")
-def all_window_minimize():
-  pyautogui.hotkey("win","m")
+  pyautogui.hotkey("win","down")        
+
 def window_close():
   pyautogui.hotkey("alt","f4")
 def restore_window(app):
@@ -368,9 +374,63 @@ def restore_window(app):
       win=window[0]# ya yaha aya ga our index[0] matlab first word ma ho ha usa  win mala la ga
       win.restore()# fir win ma jo app ha usa restore karda ga 
       win.activate()# fir restor app kahi nakuhala issa laya ya activae kause kar a kus app ka sab sa uoar la aya ga 
+      print("Sar app ko restore kar diya hai")
+      asyncio.run(speak("Sar app ko restore kar diya hai"))
     
+def auto_whatsapp_messsage(user_command):
+  prompt = f"""Extract the name and message from this command: "{user_command}". 
+               Give output strictly in two lines:
+                Just the name
+                Just the message"""
+  response=ollama.chat(
+    model="llama3",
+    messages=[{'role': 'user', 'content': prompt}]
+  )
+  response_ai = response['message']['content']
+  line = response_ai.split("\n")
+    
+  name = ""
+  message = ""
+    
+  for l in line:
+        if "Name" in l:
+            # Agar line mein Name hai, toh colon ke baad wala hissa utha lo
+            parts = l.split(":")
+            if len(parts) > 1:
+                name = parts[1].replace("*", "").strip()
+                
+        elif "Message" in l:
+            # Agar line mein Message hai, toh colon ke baad wala hissa utha lo
+            parts = l.split(":")
+            if len(parts) > 1:
+                message = parts[1].replace("*", "").strip().replace("bhejo","").strip()
 
+  print("Nikala hua Naam:", name)
+  print("Nikala hua Message:", message)
+ 
+  pyautogui.hotkey("win","r")
 
+  pyautogui.write("chrome https://web.whatsapp.com/")
+  pyautogui.press("enter")
+  
+  time.sleep(8)
+  pyautogui.hotkey("ctrl","alt","/","backspace")
+  time.sleep(3)
+  pyperclip.copy(name)
+  time.sleep(2)
+  asyncio.run(speak(f"sir whatsaap par{name} type kaar rhah hu"))
+  time.sleep(3)
+  pyautogui.hotkey("ctrl","v")
+  pyautogui.press("enter")
+  time.sleep(3)
+  for i in range(18):
+    pyautogui.press("tab")
+  pyperclip.copy(message)
+  asyncio.run(speak("Sar main aapka bataya hua message  type kar raha hun"))
+  pyautogui.hotkey("ctrl","v")
+  pyautogui.press("enter")
+  print(f"finally sir {name}  ko message bhej diya hun aur kisi ko message bhejna hai to bataiye")
+  asyncio.run(speak(f"finally sir {name}  ko message bhej diya hun aur kisi ko message bhejna hai to bataiye"))
   
 def main_command():
  asyncio.run(speak("hi sir may online hu"))
@@ -416,16 +476,18 @@ def main_command():
 
   
   elif "open" in user_command or "kholo" in user_command:
-   replace=["open","khola","crome","pa",]
+   replace=["open","khola","kholo","crome","pa",]
    for i in replace:
-    app_name=user_command.replace(i,"")
+    user_command=user_command.replace(i,"")
 
-    app_opner(app_name.strip())
+    app_opner(user_command.strip())
   elif "time" in user_command or "samay" in user_command:
    tell_time()
   elif "date" in user_command or "din" in user_command:
    tell_date()
-   
+  elif any(word in user_command for word in ["whatsapp", "message", "bhejo", "msg"]):
+    auto_whatsapp_messsage(user_command)
+     
   elif "volume" in user_command or "awaj" in user_command:
    word=user_command.split()
    level=None
@@ -439,7 +501,6 @@ def main_command():
    else:
      if( level> 100):
       print("app na glat persantage bola ha ya  100 sa jada ha")
-     
    
   
      else:
