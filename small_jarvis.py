@@ -378,61 +378,63 @@ def restore_window(app):
       asyncio.run(speak("Sar app ko restore kar diya hai"))
     
 def auto_whatsapp_messsage(user_command):
-  prompt = f"""Extract the name and message from this command: "{user_command}".               
-               Give output strictly in two lines:
-                Just the name
-                Just the message""" # ya ka promt ha jo hum allama ka pas baja ga jisa wo uma ra command ma sa name message alaga kaarka da da ga 
-  response=ollama.chat(    # ya ollama ka he ak function ha ya ya respoonse verivalema store sama  ka o ollama ka pas la gat aha 
-    model="llama3",# ya modela ha madlab hum is a function ka laya llama3 ka use kaara ga 
-    messages=[{'role': 'user', 'content': prompt}] #ya messsage veriblae h ajo ollama ka pas la jata ha isma role:user matlab yaha user ka bat ho ga 
-    # our content:promt ke jo huma ollamak ka baatana chat hae kea kaya karna ha 
-  )
-  response_ai = response['message']['content'] # ya responcse ma sa message our cintent ko alag karta ha our response ai name ka verible na rakh data ha 
-  line = response_ai.split("\n") # our fir ya dona ko alag alag karta ha our line ma rakh dat ah a
-    
-  name = ""# ya ak kahi caribal ha ya is laya ha ke agarollama na koya name nah i dia to system crasss na ho
-  message = ""# ya bhi ak kahli varible ha 
-    
-  for l in line: #
-        if "Name" in l: # ya dakhata ha  ke agar loop na Name ha 
-            # Agar line mein Name hai, toh colon ke baad wala hissa utha lo
-            parts = l.split(":")
-            if len(parts) > 1: # ya dakha ha ke list hakaam sa kam 2 hissa ho jasa "name":" touseeb"
-                name = parts[1].replace("*", "").strip() # ya part[1] ma sa * to hata ka "" kahli string ma badal da ta ha  matlab star ko hata data ha 
-                
-        elif "Message" in l: # ab ya bhi bulkul usi ka ta r kam karta ha jasa upar wala bas ya messageka laya kama kar t aha 
-            # Agar line mein Message hai, toh colon ke baad wala hissa utha lo
-            parts = l.split(":")
-            if len(parts) > 1:
-                message = parts[1].replace("*", "").strip().replace("bhejo","").strip() # our bas ua change ha ya ya ha pa bhejo bhi hat datha taki bajo chat past kar sam ana likah 
-                # only messagekikha 
+  try:
+      prompt = f"""Extract the name and message from this command: "{user_command}".               
+                  Give output strictly in two lines:
+                    Just the name
+                    Just the message""" # ya ka promt ha jo hum allama ka pas baja ga jisa wo uma ra command ma sa name message alaga kaarka da da ga 
+      response=ollama.chat(    # ya ollama ka he ak function ha ya ya respoonse verivalema store sama  ka o ollama ka pas la gat aha 
+        model="llama3",# ya modela ha madlab hum is a function ka laya llama3 ka use kaara ga 
+        messages=[{'role': 'user', 'content': prompt}] #ya messsage veriblae h ajo ollama ka pas la jata ha isma role:user matlab yaha user ka bat ho ga 
+        # our content:promt ke jo huma ollamak ka baatana chat hae kea kaya karna ha 
+      )
+      response_ai = response['message']['content'] # ya responcse ma sa message our cintent ko alag karta ha our response ai name ka verible na rakh data ha 
+      line = response_ai.split("\n") # our fir ya dona ko alag alag karta ha our line ma rakh dat ah a
+        
+      name = ""# ya ak kahi caribal ha ya is laya ha ke agarollama na koya name nah i dia to system crasss na ho
+      message = ""# ya bhi ak kahli varible ha 
+        
+      for l in line: #
+            if "Name" in l: # ya dakhata ha  ke agar loop na Name ha 
+                # Agar line mein Name hai, toh colon ke baad wala hissa utha lo
+                parts = l.split(":")
+                if len(parts) > 1: # ya dakha ha ke list hakaam sa kam 2 hissa ho jasa "name":" touseeb"
+                    name = parts[1].replace("*", "").strip() # ya part[1] ma sa * to hata ka "" kahli string ma badal da ta ha  matlab star ko hata data ha 
+                    
+            elif "Message" in l: # ab ya bhi bulkul usi ka ta r kam karta ha jasa upar wala bas ya messageka laya kama kar t aha 
+                # Agar line mein Message hai, toh colon ke baad wala hissa utha lo
+                parts = l.split(":")
+                if len(parts) > 1:
+                    message = parts[1].replace("*", "").strip().replace("bhejo","").strip() # our bas ua change ha ya ya ha pa bhejo bhi hat datha taki bajo chat past kar sam ana likah 
+                    # only messagekikha 
 
-  pyautogui.hotkey("win","r") # fir  ya short cut dabata ha 
+      pyautogui.hotkey("win","r") # fir  ya short cut dabata ha 
 
-  pyautogui.write("chrome https://web.whatsapp.com/") # ya likha ta ha
-  pyautogui.press("enter") # eter kart aha jissa cro m ma whatsapp khulta ha 
-  
-  time.sleep(8) # fir 8 sec ruktha jis what saap lhul gay 
-  pyautogui.hotkey("ctrl","alt","/","backspace")# fir ya dabaata ha jisa ya whatsaap ka searc ha bar ma chala gata ha our bakspace dabata ha taki agar galti sa koy sing phla 
-  # saaho o to hat gaya 
-  time.sleep(3) # our ya  3 sec ruktaha 
-  pyperclip.copy(name) # fir jo ollama na name alag kart dia usa ya ha par likaha ha
-  time.sleep(2) # our 2 sec ruktha 
-  asyncio.run(speak(f"sir whatsaap par{name} type kaar rhah hu")) # fir ya boltha ha ya ha f string lag  ka name likh ha tkai name j hum na bola ha whai bol isk bech ma 
-  # na ke ak fix name
-  time.sleep(3)# our fir 3 sec rukta ha 
-  pyautogui.hotkey("ctrl","v") # ya daba ka name past kart ha 
-  pyautogui.press("enter")# fir enter kart aha 
-  time.sleep(3)  # 3 sec rukta ha 
-  for i in range(18):# ya is laya laga ha taki ya 18 bar for loop dabayo our chat box ma chal gay 
-    pyautogui.press("tab")
-  pyperclip.copy(message)# ollama najomessage dia ha usa copy kar la 
-  asyncio.run(speak("Sar main aapka bataya hua message type kar raha hun")) # our fir ya bola 
-  pyautogui.hotkey("ctrl","v") # fir ya dabaka past kart ha 
-  pyautogui.press("enter")# fir enter dabata ha 
-  print(f"finally sir {name}  ko message bhej diya hun aur kisi ko message bhejna hai to bataiye") # fir akhri ma ya print kart ah a
-  asyncio.run(speak(f"finally sir {name}  ko message bhej diya hun aur kisi ko message bhejna hai to bataiye")) # fir ya bolthah
-  
+      pyautogui.write("chrome https://web.whatsapp.com/") # ya likha ta ha
+      pyautogui.press("enter") # eter kart aha jissa cro m ma whatsapp khulta ha 
+      
+      time.sleep(8) # fir 8 sec ruktha jis what saap lhul gay 
+      pyautogui.hotkey("ctrl","alt","/","backspace")# fir ya dabaata ha jisa ya whatsaap ka searc ha bar ma chala gata ha our bakspace dabata ha taki agar galti sa koy sing phla 
+      # saaho o to hat gaya 
+      time.sleep(3) # our ya  3 sec ruktaha 
+      pyperclip.copy(name) # fir jo ollama na name alag kart dia usa ya ha par likaha ha
+      time.sleep(2) # our 2 sec ruktha 
+      asyncio.run(speak(f"sir whatsaap par{name} type kaar rhah hu")) # fir ya boltha ha ya ha f string lag  ka name likh ha tkai name j hum na bola ha whai bol isk bech ma 
+      # na ke ak fix name
+      time.sleep(3)# our fir 3 sec rukta ha 
+      pyautogui.hotkey("ctrl","v") # ya daba ka name past kart ha 
+      pyautogui.press("enter")# fir enter kart aha 
+      time.sleep(3)  # 3 sec rukta ha 
+      for i in range(18):# ya is laya laga ha taki ya 18 bar for loop dabayo our chat box ma chal gay 
+        pyautogui.press("tab")
+      pyperclip.copy(message)# ollama najomessage dia ha usa copy kar la 
+      asyncio.run(speak("Sar main aapka bataya hua message type kar raha hun")) # our fir ya bola 
+      pyautogui.hotkey("ctrl","v") # fir ya dabaka past kart ha 
+      pyautogui.press("enter")# fir enter dabata ha 
+      print(f"finally sir {name}  ko message bhej diya hun aur kisi ko message bhejna hai to bataiye") # fir akhri ma ya print kart ah a
+      asyncio.run(speak(f"finally sir {name}  ko message bhej diya hun aur kisi ko message bhejna hai to bataiye")) # fir ya bolthah
+  except Exception as n:
+    print("sir kuch gadbad ho gaya ha",n)
 def main_command():
  asyncio.run(speak("hi sir may online hu"))
  while True:
