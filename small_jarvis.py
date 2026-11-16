@@ -22,8 +22,7 @@ from dotenv import load_dotenv
 load_dotenv()
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 groq_client = Groq(api_key=GROQ_API_KEY)
-for m in groq_client.models.list().data:
-    print(m.id)
+
 # File ke sabse upar yahan apni key rakh de
 # File ke sabse upar yahan apni key rakh de
 # GitHub safe configuration: Environment variable se key uthayega
@@ -54,6 +53,13 @@ import pyperclip
 import time
 pyautogui.FAILSAFE = False
 #===========================================================
+#==============auto task with mobile========================
+import datetime
+import pywhatkit
+#===========================================================
+# =================read clock===============================
+import winsound
+#==========================================================-
 async def speak(text):
 
  cominatek=edge_tts.Communicate(text,"hi-IN-MadhurNeural")
@@ -435,6 +441,35 @@ def auto_whatsapp_messsage(user_command):
       asyncio.run(speak(f"finally sir {name}  ko message bhej diya hun aur kisi ko message bhejna hai to bataiye")) # fir ya bolthah
   except Exception as n:
     print("sir kuch gadbad ho gaya ha",n)
+def clock_alam():
+  
+    current_time=datetime.datetime.now()
+    added_time=datetime.timedelta(minutes=25)
+    target_time=current_time + added_time
+    while True:
+      current_time=datetime.datetime.now()
+      if current_time>=target_time:
+       beep_time=winsound.Beep(2500,1000)
+       
+        
+       asyncio.run(speak("sir ab app ko breka lalana chiya kuy ke app bhot dar sa padh rhah jo kuch kar raha ha ruk jaiya ma 5 miniuts ka break seat kar dat hu"))
+      current_time=datetime.datetime.now()
+      added_break_time=datetime.timedelta(minutes=5)
+      while True:
+        target_time=current_time+added_break_time
+        current_time=datetime.datetime.now()
+        if current_time>=target_time:
+          beep_time=winsound.Beep(2500,1000)
+          asyncio.run(speak("sir ab app ka 5 miniuts ka rest time khatam ho gaya ha ab app wapis sa padhi startkar sakt ha "))
+          break
+          
+      
+        
+time.sleep(1)
+
+
+  
+  
 def main_command():
  asyncio.run(speak("hi sir may online hu"))
  while True:
@@ -515,6 +550,7 @@ def main_command():
     shutdown()
   elif any(word in user_command for word in["battery","charge","power"]): # any matlab koy bhi mat is ma sa koy bhi word sentenc ma ho to is ko call kar do 
     learn_leptop_battry()
+  
   elif "restart" in user_command :
     restart()
   elif any(word in user_command for word in["file","organize","orgenise"] ):
@@ -526,6 +562,9 @@ def main_command():
 
     asyncio.run(speak("bye Sar Main apne aap ko band kar Leta Hun aur kal Baat Karte Hain  aur agar aap computer band Karana Chahte Hain to shuutdown bolia "))
     break
+  elif any(word in user_command for word in["read","copy complet","padna","kaam pura","study"]):
+    asyncio.run(speak("bhot accha sir app accha sa padhia ga ma app ka satha hu ma app ka laya 25 miniuts ka timer laga data hu"))
+    asyncio.run(speak("bhot accha sir app accha sa padhia ga ma app ka satha hu ma app ka laya 25 miniuts ka timer laga data hu"))
   
   elif any(word in user_command for word in [
       "kya hai", "kay hai", "kya dikh raha",
