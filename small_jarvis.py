@@ -442,33 +442,75 @@ def auto_whatsapp_messsage(user_command):
   except Exception as n:
     print("sir kuch gadbad ho gaya ha",n)
 def clock_alam():
+        
+    current_time=datetime.datetime.now()
+    target_time = current_time + datetime.timedelta(minutes=25)
+    while True:
+          current_time=datetime.datetime.now()
+          if current_time>=target_time:
+           for i in range(5):
+               try:
+
+                beep_time=winsound.Beep(2500,1000)
+               except Exception as e:
+                    print("Beep error:", e)
+               time.sleep(0.5)
+               
+           print("Sar aap Bahut Der Se padh rahe hain ab aapko break Le Lena chahie main aapke liye 5 minut ka timer set kar deta hun")
+           asyncio.run(speak("Sar aap Bahut Der Se padh rahe hain ab aapko break Le Lena chahie main aapke liye 5 minut ka timer set kar deta hun"))
+           break
+            
+        
+          
+    time.sleep(1)
+
+
+  
   
     current_time=datetime.datetime.now()
-    added_time=datetime.timedelta(minutes=25)
-    target_time=current_time + added_time
+    target_time = current_time + datetime.timedelta(minutes=5)
+    
     while True:
+      
       current_time=datetime.datetime.now()
       if current_time>=target_time:
-       beep_time=winsound.Beep(2500,1000)
-       
-        
-       asyncio.run(speak("sir ab app ko breka lalana chiya kuy ke app bhot dar sa padh rhah jo kuch kar raha ha ruk jaiya ma 5 miniuts ka break seat kar dat hu"))
-      current_time=datetime.datetime.now()
-      added_break_time=datetime.timedelta(minutes=5)
-      while True:
-        target_time=current_time+added_break_time
-        current_time=datetime.datetime.now()
-        if current_time>=target_time:
-          beep_time=winsound.Beep(2500,1000)
-          asyncio.run(speak("sir ab app ka 5 miniuts ka rest time khatam ho gaya ha ab app wapis sa padhi startkar sakt ha "))
-          break
-          
-      
-        
-time.sleep(1)
-
-
+        print("25 miuit ka time pura ho gaya")
+        for i in range(5):
+         try:
+          winsound.Beep(2500,1000)
+         except Exception as e:
+            print("Beep error:", e)
+         time.sleep(0.5)
+         print(" app Ka 5 minut ka break khatm ho gaya hai vah aapko apni padhaai continue Karni chahie")
+         asyncio.run(speak(" app Ka 5 minut ka break khatm ho gaya hai vah aapko apni padhaai continue Karni chahie"))
+         break
+      time.sleep(1)
+def self_safty():
+   
   
+   learn_leptop_battry=psutil.sensors_battery()
+   if learn_leptop_battry is not None:
+      
+      percentage = learn_leptop_battry.percent
+
+
+      percentage=learn_leptop_battry.percent
+      if( percentage<10):
+        print("sir battery bhot kam hai" )
+        asyncio.run(speak("sir battery bhot kam hai" ))
+      elif percentage<20:
+        print("sir battery 20 percent sa kam hai ")
+        asyncio.run(speak("sir battery 20 percent sa kam hai"))
+      elif percentage<50:
+        print("sir battery 50 percent sa kam hai")
+        asyncio.run(speak("sir battery 50 percent sa kam hai"))
+       
+
+     
+ 
+self_safty()
+      
+      
   
 def main_command():
  asyncio.run(speak("hi sir may online hu"))
@@ -563,8 +605,9 @@ def main_command():
     asyncio.run(speak("bye Sar Main apne aap ko band kar Leta Hun aur kal Baat Karte Hain  aur agar aap computer band Karana Chahte Hain to shuutdown bolia "))
     break
   elif any(word in user_command for word in["read","copy complet","padna","kaam pura","study"]):
-    asyncio.run(speak("bhot accha sir app accha sa padhia ga ma app ka satha hu ma app ka laya 25 miniuts ka timer laga data hu"))
-    asyncio.run(speak("bhot accha sir app accha sa padhia ga ma app ka satha hu ma app ka laya 25 miniuts ka timer laga data hu"))
+    print("bahut acche Sar ab aap acche se padhiye q main 25 minut ka timer laga deta hun")
+    asyncio.run(speak("bahut acche Sar ab aap acche se padhiye  main 25 minut ka timer laga deta hun"))
+    clock_alam()
   
   elif any(word in user_command for word in [
       "kya hai", "kay hai", "kya dikh raha",
