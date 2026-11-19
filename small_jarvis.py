@@ -485,6 +485,7 @@ def clock_alam():
          asyncio.run(speak(" app Ka 5 minut ka break khatm ho gaya hai vah aapko apni padhaai continue Karni chahie"))
          break
       time.sleep(1)
+
 def self_safty():
    
   
@@ -504,10 +505,14 @@ def self_safty():
       elif percentage<50:
         print("sir battery 50 percent sa kam hai")
         asyncio.run(speak("sir battery 50 percent sa kam hai"))
-       
+   leptop_time=datetime.datetime.now()
+   clean_time=leptop_time.strftime("%I:%M:%p")
+   hour_time=leptop_time.hour
+   if hour_time==23 or hour_time==1 or hour_time==2 or hour_time==3: 
+     print("sir ab app  ko so jana chiya")
+     asyncio.run(speak("sir ab app ko so jana chiya "))
 
-     
- 
+   
 self_safty()
       
       
